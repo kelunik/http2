@@ -1,0 +1,53 @@
+{
+    "name": "kelunik/http2",
+    "description": "HTTP/2 test server.",
+    "type": "project",
+    "require": {
+        "amphp/http-server": "^2.1",
+        "kelunik/acme": "^1.0",
+        "amphp/log": "^1.1"
+    },
+    "require-dev": {
+        "macfja/phar-builder": "^0.2.8"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Kelunik\\Http2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Niklas Keller",
+            "email": "me@kelunik.com"
+        }
+    ],
+    "extra": {
+        "phar-builder": {
+            "compression": "GZip",
+            "name": "http2.phar",
+            "output-dir": "build",
+            "include": [
+                "info",
+                "src",
+                "vendor/kelunik/acme/res"
+            ],
+            "include-dev": false,
+            "skip-shebang": false,
+            "entry-point": "bin/http2",
+            "events": {
+                "command.package.start": [
+                    "mkdir -p info",
+                    "git describe --tags > info/build.version",
+                    "php -r 'echo time();' > info/build.time",
+                    "rm -rf vendor/amphp/file/travis",
+                    "rm -rf vendor/amphp/parallel/travis"
+                ],
+                "command.package.end": [
+                    "rm -rf info",
+                    "chmod +x build/http2.phar"
+                ]
+            }
+        }
+    }
+}
